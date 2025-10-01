@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Simulador de MRUA (Tema 3)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <h1>Cinemática en una Dimensión (MRUA)</h1>
+
+    <div class="panel">
+        <h2>Controles de la Simulación</h2>
+        <div id="controles">
+            <div class="grupo-control">
+                <label for="posicionInicial">Posición Inicial (m):</label>
+                <input type="number" id="posicionInicial" value="0">
+            </div>
+            <div class="grupo-control">
+                <label for="velocidadInicial">Velocidad Inicial (m/s):</label>
+                <input type="number" id="velocidadInicial" value="0">
+            </div>
+            <div class="grupo-control">
+                <label for="aceleracion">Aceleración (m/s²):</label>
+                <input type="number" id="aceleracion" value="2">
+            </div>
+            <div>
+                <button id="botonIniciarPausar">Iniciar</button>
+                <button id="botonReiniciar">Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Datos en Tiempo Real</h2>
+        <div id="tablero">
+            <div>Tiempo: <span id="tiempoActual">0.00</span> s</div>
+            <div>Posición: <span id="posicionActual">0.00</span> m</div>
+            <div>Velocidad: <span id="velocidadActual">0.00</span> m/s</div>
+        </div>
+        <div id="pista">
+            <img src="/assets/car-svgrepo-com.svg" id="vehiculo" alt="Vehículo en movimiento">
+        </div>
+    </div>
+
+    <div class="panel" id="seccionGraficas">
+        <div class="contenedor-grafica"><canvas id="graficaPosicion"></canvas></div>
+        <div class="contenedor-grafica"><canvas id="graficaVelocidad"></canvas></div>
+        <div class="contenedor-grafica"><canvas id="graficaAceleracion"></canvas></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
