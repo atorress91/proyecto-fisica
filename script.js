@@ -105,8 +105,10 @@ function actualizarPosicionVehiculo() {
   const anchoVehiculo = vehiculo.clientWidth;
   const posicionEnPixeles = (posicionActual / ESCALA_PISTA_METROS) * anchoPista;
 
+  const posicionVisual = posicionEnPixeles - anchoVehiculo / 2;
+
   if (vehiculoDentroDePista(posicionEnPixeles, anchoPista, anchoVehiculo)) {
-    vehiculo.style.left = posicionEnPixeles + 'px';
+    vehiculo.style.left = posicionVisual + 'px';
   } else {
     alternarEstadoSimulacion();
   }
