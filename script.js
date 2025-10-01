@@ -11,7 +11,6 @@ const mostrarTiempo = document.getElementById('tiempoActual');
 const mostrarPosicion = document.getElementById('posicionActual');
 const mostrarVelocidad = document.getElementById('velocidadActual');
 
-// === Variables de estado de la simulación ===
 let posicionActual;
 let velocidadActual;
 let aceleracionActual;
@@ -24,11 +23,10 @@ let ultimaActualizacionGrafica;
 let identificadorAnimacion;
 let simulacionEnEjecucion = false;
 
-// === Constantes de configuración ===
 const ESCALA_PISTA_METROS = 1000;
 const INTERVALO_ACTUALIZACION_GRAFICA_MS = 100;
 
-// === Configuración de gráficas con Chart.js ===
+// === gráficas con Chart ===
 function crearGrafica(contexto, etiqueta) {
   return new Chart(contexto, {
     type: 'line',
@@ -67,7 +65,7 @@ const graficaAceleracion = crearGrafica(
   'Aceleración (m/s²)'
 );
 
-// === Funciones principales de la simulación ===
+// === Funciones principales ===
 function actualizarSimulacion(momentoActual) {
   if (!simulacionEnEjecucion) return;
 
@@ -101,21 +99,19 @@ function actualizarVisualizacion() {
 }
 
 function actualizarPosicionVehiculo() {
+  if (posicionActual < 0 || posicionActual > ESCALA_PISTA_METROS) {
+    pausarSimulacion();
+    return;
+  }
+
   const anchoPista = pista.clientWidth;
   const anchoVehiculo = vehiculo.clientWidth;
   const posicionEnPixeles = (posicionActual / ESCALA_PISTA_METROS) * anchoPista;
 
   const posicionVisual = posicionEnPixeles - anchoVehiculo / 2;
 
-  if (vehiculoDentroDePista(posicionEnPixeles, anchoPista, anchoVehiculo)) {
-    vehiculo.style.left = posicionVisual + 'px';
-  } else {
-    alternarEstadoSimulacion();
-  }
-}
-
-function vehiculoDentroDePista(posicionPixeles, anchoPista, anchoVehiculo) {
-  return posicionPixeles >= 0 && posicionPixeles <= anchoPista - anchoVehiculo;
+  const posicionLimitada = Math.max(0, Math.min(posicionVisual, anchoPista - anchoVehiculo));
+  vehiculo.style.left = posicionLimitada + 'px';
 }
 
 function debeActualizarGraficas(momentoActual) {
@@ -131,12 +127,12 @@ function alternarEstadoSimulacion() {
 }
 
 function iniciarSimulacion() {
-  simulacionEnEjecucion = true;
-  botonIniciarPausar.textContent = 'Pausar';
-
   if (esPrimeraEjecucion()) {
     establecerValoresIniciales();
   }
+
+  simulacionEnEjecucion = true;
+  botonIniciarPausar.textContent = 'Pausar';
 
   ajustarMomentoInicio();
   ultimaActualizacionGrafica = performance.now();
@@ -192,7 +188,14 @@ function actualizarInterfazInicial() {
   mostrarTiempo.textContent = '0.00';
   mostrarPosicion.textContent = posicionActual.toFixed(2);
   mostrarVelocidad.textContent = velocidadActual.toFixed(2);
-  vehiculo.style.left = (posicionActual / 100) * pista.clientWidth + 'px';
+
+  const anchoPista = pista.clientWidth;
+  const anchoVehiculo = vehiculo.clientWidth;
+  const posicionEnPixeles = (posicionActual / ESCALA_PISTA_METROS) * anchoPista;
+  const posicionVisual = posicionEnPixeles - anchoVehiculo / 2;
+  const posicionLimitada = Math.max(0, Math.min(posicionVisual, anchoPista - anchoVehiculo));
+
+  vehiculo.style.left = posicionLimitada + 'px';
 }
 
 function limpiarGraficas() {
@@ -233,7 +236,7 @@ function manejarCambioPosicionInicial() {
   posicionActual = posicionInicialGuardada;
 
   mostrarPosicion.textContent = posicionActual.toFixed(2);
-  actualizarPosicionVehiculo();
+  actualizarInterfazInicial();
 }
 
 // === Eventos de usuario ===
